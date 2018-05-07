@@ -5,6 +5,12 @@ import (
 	"strings"
 )
 
+const numerals string = "1234567890123456789"
+const qwertyRow1 string = "qwertyuiop"
+const qwertyRow2 string = "asdfghjkl"
+const qwertyRow3 string = "zxcvbnm"
+const alphabet string = "abcdefghijklmnopqrstuvwxyz"
+
 type CheckRule func(string) string
 
 type ValidationRule struct {
@@ -43,6 +49,10 @@ func (validator *Validator) NoCommonPasswords() {
 	validator.rules = append(validator.rules, newCommonPasswordsRule())
 }
 
+func (validator *Validator) NoEasySpans() {
+	validator.rules = append(validator.rules, newEasySpansRule(4))
+}
+
 func newCommonPasswordsRule() ValidationRule {
 	rule := ValidationRule{}
 	rule.description = "Your password contains a commonly used password."
@@ -53,6 +63,27 @@ func newCommonPasswordsRule() ValidationRule {
 			if strings.Contains(pw, commonPw) {
 				return "Password contains string '" + commonPw + "'"
 			}
+		}
+		return ""
+	}
+	return rule
+}
+
+func newEasySpansRule(length int) ValidationRule {
+	rule := ValidationRule{}
+	rule.description = "Your password contains easily guessable strings of characters."
+	rule.check = func(pw string) string {
+		allSpans := []string{qwertyRow1, qwertyRow2, qwertyRow3, alphabet, numerals}
+		for _, span := range allSpans {
+			for m, _ := range span {
+				if len(span[m:]) >= length {
+					run := span[m : m+length]
+					if strings.Contains(pw, run) {
+						return "Password contains '" + run + "'"
+					}
+				}
+			}
+
 		}
 		return ""
 	}
