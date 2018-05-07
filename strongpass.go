@@ -2,6 +2,7 @@
 package strongpass
 
 import (
+	"math"
 	"strings"
 )
 
@@ -9,7 +10,11 @@ const numerals string = "1234567890123456789"
 const qwertyRow1 string = "qwertyuiop"
 const qwertyRow2 string = "asdfghjkl"
 const qwertyRow3 string = "zxcvbnm"
+
 const alphabet string = "abcdefghijklmnopqrstuvwxyz"
+const upperAlphabet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const numbers string = "0123456789"
+const special string = "!@#$%^&*-_=+? "
 
 type CheckRule func(string) string
 
@@ -23,7 +28,7 @@ type Validator struct {
 }
 
 type ValidationResult struct {
-	strength int
+	strength float64
 	warnings []string
 	errors   []string
 }
@@ -42,7 +47,37 @@ func (validator *Validator) Validate(pw string) ValidationResult {
 		}
 	}
 
+	result.strength = entropy(pw)
 	return result
+}
+
+func entropy(pw string) float64 {
+	charPool := make(map[string]int)
+	charPool[alphabet] = len(alphabet)
+	charPool[upperAlphabet] = len(upperAlphabet)
+	charPool[numbers] = len(numbers)
+	charPool[special] = len(special)
+
+	length := len(pw)
+	if length == 0 {
+		return 0.0
+	}
+	digits := 0
+
+	for k, _ := range charPool {
+		for _, c := range pw {
+			if strings.Contains(k, string(c)) {
+				digits += charPool[k]
+				charPool[k] = 0
+			}
+		}
+	}
+
+	if digits < 1 {
+		digits = length
+	}
+
+	return float64(length) * math.Log2(float64(digits))
 }
 
 func (validator *Validator) NoCommonPasswords() {
@@ -60,8 +95,8 @@ func newCommonPasswordsRule() ValidationRule {
 		commonPws := []string{"root", "master", "1234", "letmein",
 			"password", "qwerty", "admin", "shadow", "hello", "password1", "trustno1"}
 		for _, commonPw := range commonPws {
-			if strings.Contains(pw, commonPw) {
-				return "Password contains string '" + commonPw + "'"
+			if pw == commonPw {
+				return "Password is common: '" + commonPw + "'"
 			}
 		}
 		return ""
