@@ -88,6 +88,10 @@ func (validator *Validator) NoEasySpans() {
 	validator.rules = append(validator.rules, newEasySpansRule(4))
 }
 
+func (validator *Validator) NoInternalRepetition() {
+	validator.rules = append(validator.rules, newInternalRepetitionRule(3))
+}
+
 func newCommonPasswordsRule() ValidationRule {
 	rule := ValidationRule{}
 	rule.description = "Your password contains a commonly used password."
@@ -119,6 +123,26 @@ func newEasySpansRule(length int) ValidationRule {
 				}
 			}
 
+		}
+		return ""
+	}
+	return rule
+}
+
+func newInternalRepetitionRule(length int) ValidationRule {
+	rule := ValidationRule{}
+	rule.description = "Your password contains repeated strings of characters"
+	rule.check = func(pw string) string {
+		pwlen := len(pw)
+		for i := range pw {
+			if i+length > pwlen {
+				return ""
+			}
+
+			toMatch := pw[i : i+length]
+			if strings.Contains(pw[i+length:], toMatch) {
+				return "Password contains repeated substring: " + toMatch
+			}
 		}
 		return ""
 	}

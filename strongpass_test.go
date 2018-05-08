@@ -47,6 +47,13 @@ func TestEntropyCalculationPoolSpecial(t *testing.T) {
 	assert.InDelta(t, 31.239, result.strength, 0.001)
 }
 
+func TestEntropyCalculationStrong(t *testing.T) {
+	validator := NewValidator()
+
+	result := validator.Validate("pvt$10rKmurL")
+	assert.InDelta(t, 74.975, result.strength, 0.001)
+}
+
 func TestCommonPasswordsRule(t *testing.T) {
 	validator := NewValidator()
 	validator.NoCommonPasswords()
@@ -64,4 +71,14 @@ func TestEasySpansRule(t *testing.T) {
 	assert.Equal(t, "Password contains 'qwer'", validator.Validate("0qwerty0").errors[0])
 	assert.Equal(t, "Password contains 'vwxy'", validator.Validate("ABCvwxyz").errors[0])
 	assert.Equal(t, "Password contains '0123'", validator.Validate("myPas012365").errors[0])
+}
+
+func TestInternalRepetitionRule(t *testing.T) {
+	validator := NewValidator()
+	validator.NoInternalRepetition()
+
+	assert.Equal(t, "Password contains repeated substring: gre", validator.Validate("gregre").errors[0])
+	assert.Equal(t, "Password contains repeated substring: cat", validator.Validate("a3catb4cat").errors[0])
+	assert.Equal(t, "Password contains repeated substring: paz", validator.Validate("paz0paz0").errors[0])
+	assert.Equal(t, 0, len(validator.Validate("ab1ab2cd1cd2be0be2").errors))
 }
