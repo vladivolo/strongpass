@@ -3,6 +3,7 @@ package strongpass
 
 import (
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -80,6 +81,13 @@ func entropy(pw string) float64 {
 	return float64(length) * math.Log2(float64(digits))
 }
 
+func (validator *Validator) WithStandardRules() {
+	validator.NoCommonPasswords()
+	validator.NoEasySpans()
+	validator.NoInternalRepetition()
+	validator.MinimumCharacterCount()
+}
+
 func (validator *Validator) NoCommonPasswords() {
 	validator.rules = append(validator.rules, newCommonPasswordsRule())
 }
@@ -90,6 +98,10 @@ func (validator *Validator) NoEasySpans() {
 
 func (validator *Validator) NoInternalRepetition() {
 	validator.rules = append(validator.rules, newInternalRepetitionRule(3))
+}
+
+func (validator *Validator) MinimumCharacterCount() {
+	validator.rules = append(validator.rules, newCharacterCountRule(8))
 }
 
 func newCommonPasswordsRule() ValidationRule {
@@ -143,6 +155,18 @@ func newInternalRepetitionRule(length int) ValidationRule {
 			if strings.Contains(pw[i+length:], toMatch) {
 				return "Password contains repeated substring: " + toMatch
 			}
+		}
+		return ""
+	}
+	return rule
+}
+
+func newCharacterCountRule(length int) ValidationRule {
+	rule := ValidationRule{}
+	rule.description = "Your password is to short. Try adding more characters"
+	rule.check = func(pw string) string {
+		if len(pw) < length {
+			return "Password must be at least " + strconv.Itoa(length) + " characters."
 		}
 		return ""
 	}
