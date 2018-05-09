@@ -62,6 +62,7 @@ func TestCommonPasswordsRule(t *testing.T) {
 	assert.Equal(t, "Password is common: 'password'", validator.Validate("password").errors[0])
 	assert.Equal(t, "Password is common: 'hello'", validator.Validate("hello").errors[0])
 	assert.Equal(t, 0, len(validator.Validate("hhelloo").errors))
+	assert.Equal(t, "Password is common: 'love13'", validator.Validate("love13").errors[0])
 }
 
 func TestEasySpansRule(t *testing.T) {

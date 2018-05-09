@@ -7,13 +7,14 @@ import (
 	"strings"
 )
 
-const numerals string = "123456789012345678909876543210"
+const numerals string = "1234567890123456789098765432100007894561230000741852963000321654987"
 const qwertyRow1 string = "qwertyuiop"
 const qwertyRow2 string = "asdfghjkl"
 const qwertyRow3 string = "zxcvbnm"
 const qwertyNumberCol string = "1q2w3e4r5t6y7u8i9o0p"
 const qwertyCols string = "1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0p"
 const qwertyRowBy3 string = "123qweasdzxc456rtyfghvbn789uiojklm"
+
 var allSpans = []string{qwertyRow1, qwertyRow2, qwertyRow3, alphabet, numerals, qwertyNumberCol, qwertyCols, qwertyRowBy3}
 
 const alphabet string = "abcdefghijklmnopqrstuvwxyz"
@@ -21,10 +22,20 @@ const upperAlphabet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const numbers string = "0123456789"
 const special string = "!@#$%^&*-_=+? "
 
-var commonPws = []string{"root", "master", "1234", "letmein",
+var commonPws = []string{"", "root", "master", "1234", "letmein",
 	"password", "qwerty", "admin", "shadow", "hello", "password1", "trustno1",
-	"abc123", "iloveyou", "monkey", "123321", "dragon", "123", "myspace1", "121212",
-	"123abc", "tinkle", "princess", "football", "jessica", "love"}
+	"abc", "iloveyou", "monkey", "123321", "dragon", "123", "myspace", "1212",
+	"123abc", "tinkle", "princess", "football", "jessica", "love", "lucky", "baby",
+	"soccer", "golden", "strawberry", "orlando", "bismillah", "carmen", "angelo", "tiffany",
+	"rabbit", "rainbow", "angel", "tiffany", "sexy", "pass", "beauty", "bonjour", "test", "tester",
+	"jesus", "christian", "killer", "jordan", "lebron", "money", "number", "hunter", "loveme",
+	"pokemon", "internet", "batman", "orange", "brandon", "london", "lol", "chris", "linkedin",
+	"baseball", "basketball", "purple", "yellow", "green", "secret", "passwort", "kakashi", "naruto",
+	"ashley", "steven", "nicole", "matthew", "michelle", "computer", "andrew", "red", "jasmine",
+	"chocolate", "heather", "peanut", "Password", "ginger", "melissa", "stupid", "newyork", "monster",
+	"crazy", "tiger", "dolphin"}
+
+var commonSuffixes = []string{"1", "2", "3", "12", "123", "1234", "10", "13", "4", "5", "6", "7", "8", "9", "0", "!", "23", "11"}
 
 type CheckRule func(string) string
 
@@ -124,6 +135,11 @@ func newCommonPasswordsRule() ValidationRule {
 		for _, commonPw := range commonPws {
 			if pw == commonPw {
 				return "Password is common: '" + commonPw + "'"
+			}
+			for _, suffix := range commonSuffixes {
+				if pw == commonPw+suffix {
+					return "Password is common: '" + commonPw + suffix + "'"
+				}
 			}
 		}
 		return ""
