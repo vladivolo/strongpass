@@ -7,15 +7,24 @@ import (
 	"strings"
 )
 
-const numerals string = "1234567890123456789"
+const numerals string = "123456789012345678909876543210"
 const qwertyRow1 string = "qwertyuiop"
 const qwertyRow2 string = "asdfghjkl"
 const qwertyRow3 string = "zxcvbnm"
+const qwertyNumberCol string = "1q2w3e4r5t6y7u8i9o0p"
+const qwertyCols string = "1qaz2wsx3edc4rfv5tgb6yhn7ujm8ik9ol0p"
+const qwertyRowBy3 string = "123qweasdzxc456rtyfghvbn789uiojklm"
+var allSpans = []string{qwertyRow1, qwertyRow2, qwertyRow3, alphabet, numerals, qwertyNumberCol, qwertyCols, qwertyRowBy3}
 
 const alphabet string = "abcdefghijklmnopqrstuvwxyz"
 const upperAlphabet string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const numbers string = "0123456789"
 const special string = "!@#$%^&*-_=+? "
+
+var commonPws = []string{"root", "master", "1234", "letmein",
+	"password", "qwerty", "admin", "shadow", "hello", "password1", "trustno1",
+	"abc123", "iloveyou", "monkey", "123321", "dragon", "123", "myspace1", "121212",
+	"123abc", "tinkle", "princess", "football", "jessica", "love"}
 
 type CheckRule func(string) string
 
@@ -32,6 +41,10 @@ type ValidationResult struct {
 	strength float64
 	warnings []string
 	errors   []string
+}
+
+func (res ValidationResult) HasErrors() bool {
+	return len(res.errors) > 0
 }
 
 func NewValidator() *Validator {
@@ -108,8 +121,6 @@ func newCommonPasswordsRule() ValidationRule {
 	rule := ValidationRule{}
 	rule.description = "Your password contains a commonly used password."
 	rule.check = func(pw string) string {
-		commonPws := []string{"root", "master", "1234", "letmein",
-			"password", "qwerty", "admin", "shadow", "hello", "password1", "trustno1"}
 		for _, commonPw := range commonPws {
 			if pw == commonPw {
 				return "Password is common: '" + commonPw + "'"
@@ -124,7 +135,6 @@ func newEasySpansRule(length int) ValidationRule {
 	rule := ValidationRule{}
 	rule.description = "Your password contains easily guessable strings of characters."
 	rule.check = func(pw string) string {
-		allSpans := []string{qwertyRow1, qwertyRow2, qwertyRow3, alphabet, numerals}
 		for _, span := range allSpans {
 			for m, _ := range span {
 				if len(span[m:]) >= length {
