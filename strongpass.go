@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const numerals string = "1234567890123456789098765432100007894561230000741852963000321654987"
+const numerals string = "123456789012345678900098765432100007894561230000741852963000321654987"
 const qwertyRow1 string = "qwertyuiop"
 const qwertyRow2 string = "asdfghjkl"
 const qwertyRow3 string = "zxcvbnm"
@@ -30,12 +30,15 @@ var commonPws = []string{"", "root", "master", "1234", "letmein",
 	"rabbit", "rainbow", "angel", "tiffany", "sexy", "pass", "beauty", "bonjour", "test", "tester",
 	"jesus", "christian", "killer", "jordan", "lebron", "money", "number", "hunter", "loveme",
 	"pokemon", "internet", "batman", "orange", "brandon", "london", "lol", "chris", "linkedin",
-	"baseball", "basketball", "purple", "yellow", "green", "secret", "passwort", "kakashi", "naruto",
+	"baseball", "basketball", "purple", "yellow", "green","blue", "secret", "passwort", "kakashi", "naruto",
 	"ashley", "steven", "nicole", "matthew", "michelle", "computer", "andrew", "red", "jasmine",
 	"chocolate", "heather", "peanut", "Password", "ginger", "melissa", "stupid", "newyork", "monster",
-	"crazy", "tiger", "dolphin"}
+	"crazy", "tiger", "dolphin", "111", "1313", "anthony", "butterfly", "flower", "forever", "samsung",
+	"happy", "patrick", "victoria", "william", "richard", "banana", "welcome", "hannah", "james", "buddy",
+	"cheese", "music", "black", "tyler", "sakura", "george", "hockey", "ilove", "fuck", "superman", "cookie",
+	"bball"}
 
-var commonSuffixes = []string{"1", "2", "3", "12", "123", "1234", "10", "13", "4", "5", "6", "7", "8", "9", "0", "!", "23", "11"}
+var commonSuffixes = []string{"1", "2", "3", "12", "123", "1234", "10", "13", "4", "5", "6", "7", "8", "9", "0", "!", "23", "11", "me", "u", "you", "you1", "you2", "off", "69"}
 
 type CheckRule func(string) string
 
