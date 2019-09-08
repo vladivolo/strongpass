@@ -88,7 +88,7 @@ func TestCharacterCountRule(t *testing.T) {
 	validator := NewValidator()
 	validator.MinimumCharacterCount()
 
-	assert.Equal(t, "Password must be at least 8 characters.", validator.Validate("abadaqe").errors[0])
+	assert.Equal(t, "Password must be at least 6 characters.", validator.Validate("abada").errors[0])
 	assert.Equal(t, 0, len(validator.Validate("panamare").errors))
 }
 
@@ -100,5 +100,4 @@ func TestMultipleRules(t *testing.T) {
 
 	assert.Equal(t, "Password contains 'asdf'", result.errors[0])
 	assert.Equal(t, "Password contains repeated substring: asd", result.errors[1])
-	assert.Equal(t, "Password must be at least 8 characters.", result.errors[2])
 }

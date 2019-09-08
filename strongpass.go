@@ -30,7 +30,7 @@ var commonPws = []string{"", "root", "master", "1234", "letmein",
 	"rabbit", "rainbow", "angel", "tiffany", "sexy", "pass", "beauty", "bonjour", "test", "tester",
 	"jesus", "christian", "killer", "jordan", "lebron", "money", "number", "hunter", "loveme",
 	"pokemon", "internet", "batman", "orange", "brandon", "london", "lol", "chris", "linkedin",
-	"baseball", "basketball", "purple", "yellow", "green","blue", "secret", "passwort", "kakashi", "naruto",
+	"baseball", "basketball", "purple", "yellow", "green", "blue", "secret", "passwort", "kakashi", "naruto",
 	"ashley", "steven", "nicole", "matthew", "michelle", "computer", "andrew", "red", "jasmine",
 	"chocolate", "heather", "peanut", "Password", "ginger", "melissa", "stupid", "newyork", "monster",
 	"crazy", "tiger", "dolphin", "111", "1313", "anthony", "butterfly", "flower", "forever", "samsung",
@@ -59,6 +59,10 @@ type ValidationResult struct {
 
 func (res ValidationResult) HasErrors() bool {
 	return len(res.errors) > 0
+}
+
+func (res ValidationResult) Strength() float64 {
+	return res.strength
 }
 
 func NewValidator() *Validator {
@@ -128,7 +132,7 @@ func (validator *Validator) NoInternalRepetition() {
 }
 
 func (validator *Validator) MinimumCharacterCount() {
-	validator.rules = append(validator.rules, newCharacterCountRule(8))
+	validator.rules = append(validator.rules, newCharacterCountRule(6))
 }
 
 func newCommonPasswordsRule() ValidationRule {
