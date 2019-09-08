@@ -65,6 +65,10 @@ func (res ValidationResult) Strength() float64 {
 	return res.strength
 }
 
+func (res ValidationResult) Errors() []string {
+	return res.errors
+}
+
 func NewValidator() *Validator {
 	return &Validator{rules: make([]ValidationRule, 0)}
 }
